@@ -37,7 +37,8 @@
 	"JobClasses": {
 		"EchoNotificationJob": "EchoNotificationJob",
 		"EchoNotificationDeleteJob": "EchoNotificationDeleteJob",
-		"EchoPushNotificationRequest": "EchoPush\\NotificationRequestJob"
+		"EchoPushNotificationRequest": "EchoPush\\NotificationRequestJob",
+		"EchoPushEditReminder": "EchoPush\\EditReminderJob"
 	},
 	"SpecialPages": {
 		"Notifications": "SpecialNotifications",
@@ -477,7 +478,10 @@
 		"UserMergeAccountDeleteTables": "EchoHooks::onUserMergeAccountDeleteTables",
 		"EchoGetBundleRules": "EchoHooks::onEchoGetBundleRules",
 		"EchoAbortEmailNotification": "EchoHooks::onEchoAbortEmailNotification",
-		"PageSaveComplete": "EchoHooks::onPageSaveComplete",
+		"PageSaveComplete": [
+			"EchoHooks::onPageSaveComplete",
+			"EchoPush\\Hooks::onPageSaveComplete"
+		],
 		"LocalUserCreated": "EchoHooks::onLocalUserCreated",
 		"RollbackComplete": "EchoHooks::onRollbackComplete",
 		"UserSaveSettings": "EchoHooks::onUserSaveSettings",
@@ -1025,6 +1029,14 @@
 		"EchoPushServiceBaseUrl": {
 			"value": false,
 			"description": "Request endpoint URL for the push notification service"
+		},
+		"EchoPushEditReminderEnabled": {
+			"value": false,
+			"description": "Flag to enable/disable edit reminder notifications"
+		},
+		"EchoPushEditReminderInterval": {
+			"value": 0,
+			"description": "Time interval (ms) for edit reminder notifications"
 		},
 		"EchoPushMaxSubscriptionsPerUser": {
 			"value": 0,

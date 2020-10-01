@@ -2,25 +2,12 @@
 
 namespace EchoPush;
 
-use EchoServices;
-use Job;
-
-class NotificationRequestJob extends Job {
-
+class NotificationRequestJob extends AbstractNotificationRequestJob {
 	/**
-	 * @return bool success
+	 * @param NotificationServiceClient $client
+	 * @param array array of Subscription objects $subscriptions
 	 */
-	public function run(): bool {
-		$centralId = $this->params['centralId'];
-		$echoServices = EchoServices::getInstance();
-		$subscriptionManager = $echoServices->getPushSubscriptionManager();
-		$subscriptions = $subscriptionManager->getSubscriptionsForUser( $centralId );
-		if ( count( $subscriptions ) === 0 ) {
-			return true;
-		}
-		$serviceClient = $echoServices->getPushNotificationServiceClient();
-		$serviceClient->sendCheckEchoRequests( $subscriptions );
-		return true;
+	protected function sendPushRequests( $client, $subscriptions ) {
+		$client->sendCheckEchoRequests( $subscriptions );
 	}
-
 }

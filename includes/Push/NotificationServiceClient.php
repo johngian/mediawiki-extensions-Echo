@@ -28,11 +28,12 @@ class NotificationServiceClient implements LoggerAwareInterface {
 	}
 
 	/**
-	 * Send a CHECK_ECHO notification request to the push service for each subscription found.
+	 * Send a notification request to the push service for each subscription found given a message type.
 	 * TODO: Update the service to handle multiple providers in a single request (T254379)
 	 * @param array $subscriptions Subscriptions for which to send the message
+	 * @param string $messageType Message type of the notification
 	 */
-	public function sendCheckEchoRequests( array $subscriptions ): void {
+	protected function sendRequests( array $subscriptions, string $messageType ): void {
 		$tokenMap = [];
 		foreach ( $subscriptions as $subscription ) {
 			$provider = $subscription->getProvider();
@@ -48,7 +49,7 @@ class NotificationServiceClient implements LoggerAwareInterface {
 				$tokens = $tokenMap[$topic][$provider];
 				$payload = [
 					'deviceTokens' => $tokens,
-					'messageType' => 'checkEchoV1'
+					'messageType' => $messageType
 				];
 				if ( $topic !== 0 ) {
 					$payload['topic'] = $topic;
@@ -56,6 +57,22 @@ class NotificationServiceClient implements LoggerAwareInterface {
 				$this->sendRequest( $provider, $payload );
 			}
 		}
+	}
+
+	/**
+	 * Send a `checkEcho` notification request to the push service for each subscription found.
+	 * @param array $subscriptions Subscriptions for which to send the message
+	 */
+	public function sendCheckEchoRequests( array $subscriptions ) {
+		$this->sendRequests( $subscriptions, 'checkEchoV1' );
+	}
+
+	/**
+	 * Send a `editReminder` notification request to the push service for each subscription found.
+	 * @param array $subscriptions Subscriptions for which to send the message
+	 */
+	public function sendEditReminderRequests( array $subscriptions ) {
+		$this->sendRequests( $subscriptions, 'editReminderV1' );
 	}
 
 	/**

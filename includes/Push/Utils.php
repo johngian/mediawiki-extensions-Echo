@@ -22,4 +22,15 @@ class Utils {
 		) ?: $user->getId();
 	}
 
+	/**
+	 * Return a User object given a matching central ID and fallback to a local ID.
+	 * @param int $userId
+	 * @return User
+	 */
+	public static function getPushUser( int $userId ): User {
+		return CentralIdLookup::factory()->localUserFromCentralId(
+			$userId,
+			CentralIdLookup::AUDIENCE_RAW
+		) ?: User::newFromId( $userId );
+	}
 }
